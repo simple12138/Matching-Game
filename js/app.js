@@ -1,7 +1,9 @@
 /*
  * Create a list that holds all of your cards
  */
+console
 var aarray=new Array();
+window.onload=startTime();
 var cards = document.getElementsByClassName("deck")[0].getElementsByClassName("card");
 var cardnum=16;
 var move=0;
@@ -18,7 +20,7 @@ $(".deck").on('click','li',event);
 
 //每当翻动卡片到一定次数，星星数目会减少，作为游戏成绩的判定
 function cutstart(){
-	if(move==3||move==6||move==9){
+	if(move==12||move==18){
 	var starts=document.getElementsByClassName("stars")[0].getElementsByClassName('fa-star');
 		starts[starts.length-1].className="fa fa-star-o";
 	}	
@@ -72,11 +74,10 @@ repeat.onclick=function(){
 	deck.innerHTML=list;
 	move=0;
 	moves.innerHTML=move;
-	var cutstarts=document.getElementsByClassName("stars")[0].getElementsByClassName('fa-star-o');
-	for(var i=0;i<cutstarts.length;i++){
-		cutstarts[i].className="fa fa-star";
-	}
-	
+	cuntstart();
+	k=0;
+	stopTime();
+	startTime();
 }
 
 //卡片点击事件，给当前点击的卡片加上show和open，也就是翻过来的效果，ganme数组用来记录已经翻过来的两张卡片，方便判断
@@ -93,7 +94,9 @@ function event(){
 	}
 		
 	if(cardnum==0){
-		alert("游戏结束,你赢了，点击右上角的圈圈可以重新开始");
+	var cutstarts=document.getElementsByClassName("stars")[0].getElementsByClassName('fa-star-o');
+	var startnum=3-cutstarts.length;
+		alert("游戏结束,你赢了，移动了"+ move+"次,使用时间为:"+k+"秒，评价为"+startnum+"颗星，点击右上角的圈圈可以重新开始");
 	}
 }
 
@@ -104,7 +107,6 @@ function match(){
 	if(game.length>=2&&game[0]===game[1]){
 		document.getElementsByClassName("show")[0].className="card"+" "+"match";
 		document.getElementsByClassName("show")[0].className="card"+" "+"match";
-		this.className="card"+" "+"match";
 		game=[];
 		cardnum=cardnum-2;
 		move++;
@@ -112,15 +114,36 @@ function match(){
 		cutstart();
 	}else if(game.length>=2){
 		setTimeout(function(){
-		document.getElementsByClassName("error")[0].className="card";
-		document.getElementsByClassName("error")[0].className="card";
+		document.getElementsByClassName("error")[0].className="card"+" "+"animated"+" "+"flipInY";
+		document.getElementsByClassName("error")[0].className="card"+" "+"animated"+" "+"flipInY";
 		},1000);
 		document.getElementsByClassName("show")[0].className="card"+" "+"error"+" "+"animated"+" "+"rubberBand";
 		document.getElementsByClassName("show")[0].className="card"+" "+"error"+" "+"animated"+" "+"rubberBand";
-		this.className="card";
 		game=[];
 		move++;
 		moves.innerHTML=move;
 		cutstart();
 	}
+}
+
+//复原星星
+function cuntstart(){
+	var cutstarts=document.getElementsByClassName("stars")[0].getElementsByClassName('fa-star-o');
+	for (var i=0;i<cutstarts.length;i++) {
+		cutstarts[i].className="fa fa-star";	
+	}
+	if(cutstarts.length){cuntstart();}
+}
+
+//计时器函数
+var k=0;
+var t;
+function startTime(){
+	document.getElementById("time").innerHTML=k;
+    k=k+1;
+    t=setTimeout("startTime()",1000);//1s
+}
+       
+function stopTime(){
+    clearTimeout(t);
 }
